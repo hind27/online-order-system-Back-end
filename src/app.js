@@ -1,18 +1,21 @@
 const express=require('express')
 const path= require('path')
-const http = require('http')
+//const http = require('http')
 require('./dbConnection/db')
 const userRoutes = require('./routes/user')
+const sellerRoutes = require('./routes/seller')
 const multer = require("multer");
 const cors = require("cors");
 const soketio = require('socket.io')
 const app = express()
-const server =http.createServer(app)
-const io = soketio(server)
+//const server =http.createServer(app)
+//const io = soketio(server)
 
 app.use(express.json())
 app.use(userRoutes)
+app.use(sellerRoutes)
 app.use(cors())
+
 // app.use("/auth", upload.array("images", 10), authRoutes);
 // app.use("/seller", upload.single("image"), itemRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));

@@ -3,18 +3,30 @@ const User = require("../models/user");
 const Seller = require('../models/seller')
 const Item = require('../models/item')
 
+function handleError(res, err) {
+    return res.status(400).send({
+        error: err.message,
+        apiStatus:false,
+        data: 'unauthorized user'
+    });
+  }
 
-exports.getRestaurants = (req, res, next) => {
-   
-  };
-
+// exports.getallitems = function(req, res) {
+//     Item.find(function(err, items) {
+//       if (err) {
+//         return handleError(res, err);
+//       }
+//       return res.json(200, items);
+//     });
+//   };
+  
   //additem
 exports.addItem = async(req, res, next) =>{
     try {
         const item = new Item({...req.body,
             owner: req.seller._id
         })
-        item.clicks = 0
+
         await item.save()
         res.status(201).send({  
             error: null,

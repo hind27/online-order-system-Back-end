@@ -1,10 +1,11 @@
   
-const mongoose = require('mongoose')
+const mongoose = require("mongoose"),
+Schema = mongoose.Schema;
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const SellerSchema = mongoose.Schema(
+const SellerSchema = Schema(
   {
     storeName: {
       required: true,
@@ -17,7 +18,7 @@ const SellerSchema = mongoose.Schema(
     imageUrl: {
       type: String,
      // required: true,
-    },
+    }, 
     addresses:[
                {
                   street: String,
@@ -30,12 +31,13 @@ const SellerSchema = mongoose.Schema(
           ],
        
     numberOfBranches: Number,
+    _Items: [{ type: Schema.ObjectId, ref: "Item" }]
   },
   { timestamps: true }
 );
 
 SellerSchema.virtual('item', {
-    ref: 'item',
+    ref: 'Item',
     localField: '_id',
     foreignField: 'owner'
 })

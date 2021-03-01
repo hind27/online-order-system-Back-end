@@ -26,12 +26,12 @@ const itemSchema = new Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'seller'
+      ref: 'Seller'
   }
 }, {
   timestamps: true
 })
-Item = mongoose.model('item', itemSchema)
+Item = mongoose.model('Item', itemSchema)
 
 module.exports = Item
 

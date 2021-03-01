@@ -62,15 +62,15 @@ userSchema.pre('save', async function(next){
 })
 
 //remove tasks for user
-userSchema.pre('remove', async function(next){
-    const user = this
-    await Task.deleteMany({user_id: user._id})
-    next()
-})
+// userSchema.pre('remove', async function(next){
+//     const user = this
+//     await Task.deleteMany({user_id: user._id})
+//     next()
+// })
 //generate token 
 userSchema.methods.generateToken = async function(){
     const user = this
-    const token = jwt.sign({_id: user._id.toString()}, process.env.JWTKEY)
+    const token = jwt.sign({_id: user._id.toString() , role:user.role}, process.env.JWTKEY)
     user.tokens = user.tokens.concat({token})
     await user.save()
     return token

@@ -1,11 +1,8 @@
 const express = require('express')
-const User = require("../models/user");
-const Seller = require('../models/seller')
-const Item = require('../models/item')
-const {auth, authRole } = require('../middleware/auth')
+
+const {auth, hasRoles } = require('../middleware/auth')
 const multer = require('multer')
-const bcrypt = require('bcryptjs')
-const userController = require('../controllers/userController');
+
 const sellerController = require('../controllers/sellerController');
 const router = new express.Router()
 
@@ -18,11 +15,13 @@ const router = new express.Router()
 
 
 
-router.post('/seller/item/add', auth, sellerController.addItem) 
+router.post('/seller/item/add',auth,hasRoles(['admin', 'seller']),sellerController.addItem) 
 
-router.patch('/seller/item/:id', auth, sellerController.editItem)
+router.patch('/seller/item/:id',auth, hasRoles(['admin', 'seller']),sellerController.editItem)
 
-router.delete('/seller/item/:id', auth, sellerController.deleteItem )
-router.get('/seller/items', auth, sellerController.allItems)
+router.delete('/seller/item/:id', hasRoles(['admin', 'seller']), sellerController.deleteItem )
+router.get('/seller/items', hasRoles(['admin', 'seller']) ,sellerController.allItems)
 
-router.get('/seller/item/:id',sellerController.getSingleItem)
+router.get('/seller/item/:id', sellerController.getSingleItem)
+
+module.exports=router

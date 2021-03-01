@@ -17,11 +17,15 @@ const itemSchema = new Schema(
   },
     imageUrl: {
       type: String,
-      required: true,
+     // required: true,
     },
     price: {
       type: Number,
       required: true,
+    },
+    clicks: {
+      type: Number,
+      required: true
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,

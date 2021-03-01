@@ -2,16 +2,18 @@ const jwt = require('jsonwebtoken')
 
 
 
+
 const auth = async(req, res, next)=>{
     const token = req.header('Authorization').replace('Bearer ', '')
      if (!token) return res.status(401).send("Access denied");
     try{
         const decodedToken = jwt.verify(token, process.env.JWTKEY)
-        const user = await User.findOne({_id: decodedToken._id, 'tokens.token':token})
+        const user = await User.findOne({_id: decodedToken._id, 'tokens.token':token ,  role: user.role})
         
-        if(!user) throw new Error()
+        if(!user) throw new  Error("User cannot find!!");
         //user.isVerified = true;
         req.user= user
+        req.user.role = role
         next()
     }
     catch(error){
@@ -22,23 +24,35 @@ const auth = async(req, res, next)=>{
         })
     }
 }
+//app.get('/api/test', hasRoles(['admin', 'freelancer'], callback);
+function hasRoles(roles) {
+  return hasRoles[roles] || (hasRoles[roles] = function(req, res, next) {
+      var isAllowed = false,
+        user = req.session.user;
 
+    roles.forEach(function(role) {
+        user.roles.forEach(function(userRole) {
+          // roles must be in lowercase
+          if(role === userRole) {
+            isAllowed = true;
+          }
+        });
+    });
 
-function authRole(role) {
-    return (req, res, next) => {
-      if (req.user.role !== role) {
-        res.status(401)
-        return res.send('Not allowed')
-      }
-  
-      next()
+    if(!isAllowed) {
+      res.send(401, {message: 'Unauthorized'});
+    } else {
+      next();
     }
-  }
+  });
+}
+
+
   
   
   module.exports = {
     auth,
-    authRole
+    hasRoles
   }
 // const isAdmin = async (req, res, next) => {
 

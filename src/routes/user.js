@@ -3,7 +3,7 @@ const express = require('express')
 const User = require("../models/user");
 const Seller = require('../models/seller')
 const Item = require('../models/item')
-const {auth, authRole } = require('../middleware/auth')
+const {auth, hasRoles } = require('../middleware/auth')
 const multer = require('multer')
 const bcrypt = require('bcryptjs')
 const userController = require('../controllers/userController');
@@ -20,9 +20,9 @@ router.post('/user/logout',auth, userController.logout)
 //logout of all devices
 router.post('/user/logoutAll',auth, userController.logoutAll)
 //user Profile
-router.get('/user/me',auth,authRole("user"),userController.showMe)
+router.get('/user/me',auth, hasRoles(['admin', 'user']),userController.showMe)
 //edit Password
-router.post('/user/changePassword', auth,authRole("user"), userController.changePassword)
+router.post('/user/changePassword', auth, hasRoles(['admin', 'user']), userController.changePassword)
 //edit phone and name
 router.patch('/user/me', auth, userController.editUser)
 //delete user

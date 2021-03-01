@@ -21,12 +21,11 @@ function handleError(res, err) {
 //   };
   
   //additem
-exports.addItem = async(req, res, next) =>{
+exports.addItem = async(req, res) =>{
     try {
         const item = new Item({...req.body,
             owner: req.seller._id
         })
-
         await item.save()
         res.status(201).send({  
             error: null,
@@ -34,7 +33,7 @@ exports.addItem = async(req, res, next) =>{
             message: "item added", item })
     } catch (e) {
         res.status(500).send({ 
-            error: error.message,
+            error: e,
             apiStatus:false, 
             message: "internal server error" })
     }

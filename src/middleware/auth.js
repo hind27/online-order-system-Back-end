@@ -1,15 +1,16 @@
 const jwt = require('jsonwebtoken')
+const User = require("../models/user");
 
 
 
 
 const auth = async(req, res, next)=>{
-    const token = req.header('Authorization').replace('Bearer ', '')
-     if (!token) return res.status(401).send("Access denied");
+   
     try{
+      const token = req.header('Authorization').replace('Bearer ', '')
+      if (!token) return res.status(401).send("Access denied");
         const decodedToken = jwt.verify(token, process.env.JWTKEY)
-        const user = await User.findOne({_id: decodedToken._id, 'tokens.token':token ,  role: user.role})
-        
+        const user = await User.findOne({_id: decodedToken._id, 'tokens.token':token })
         if(!user) throw new  Error("User cannot find!!");
         //user.isVerified = true;
         req.user= user

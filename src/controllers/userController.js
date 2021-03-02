@@ -75,17 +75,17 @@ exports.signupUser = async (req, res, next) => {
 exports.login = async (req, res, next) => {
     try{
          const user = await User.findUserByCredentials(req.body.email, req.body.password)
-        //  let seller 
+         let seller 
         const token = await user.generateToken()
-        // if(user.role=='seller'){
+        if(user.role=='seller'){
           
-        //     seller= await Seller.find({_id:user.storeinfo})
-        //     res.status(200).send({
-        //         error: null,
-        //         apiStatus:true,
-        //         data: {user,seller,token}
-        //     })
-        // }
+            seller= await Seller.find({_id:user._userId}).populate("_Seller")
+            res.status(200).send({
+                error: null,
+                apiStatus:true,
+                data: {user,seller,token}
+            })
+        }
         res.status(200).send({
             error: null,
             apiStatus:true,

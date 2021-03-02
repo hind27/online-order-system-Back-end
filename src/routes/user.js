@@ -20,7 +20,8 @@ router.post('/user/logout',auth, userController.logout)
 //logout of all devices
 router.post('/user/logoutAll',auth, userController.logoutAll)
 //user Profile
-router.get('/user/me',auth, hasRoles(['admin', 'user']),userController.showMe)
+// hasRoles(['admin', 'user']),
+router.get('/user/me',auth,userController.showMe)
 //edit Password
 router.post('/user/changePassword', auth, hasRoles(['admin', 'user']), userController.changePassword)
 //edit phone and name

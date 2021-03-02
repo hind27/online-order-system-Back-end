@@ -14,7 +14,7 @@ const auth = async(req, res, next)=>{
         if(!user) throw new  Error("User cannot find!!");
         //user.isVerified = true;
         req.user= user
-        req.user.role = role
+        req.token = token
         next()
     }
     catch(error){

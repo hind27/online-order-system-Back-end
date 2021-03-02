@@ -31,7 +31,8 @@ const SellerSchema = Schema(
           ],
        
     numberOfBranches: Number,
-    _Items: [{ type: Schema.ObjectId, ref: "Item" }]
+    _userId:{ type: Schema.Types.ObjectId, ref: 'User'},
+    _Items: [{ type: Schema.Types.ObjectId, ref: "Item" }]
   },
   { timestamps: true }
 );

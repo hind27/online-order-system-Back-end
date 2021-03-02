@@ -13,15 +13,15 @@ const router = new express.Router()
 // router.patch("/:id", auth.hasRole("manager"), controller.update);
 // router.delete("/:id", auth.hasRole("manager"), controller.destroy);
 
+// hasRoles(['admin', 'seller'])
 
+router.post('/seller/item/add',auth,sellerController.addItem) 
 
-router.post('/seller/item/add',auth,hasRoles(['admin', 'seller']),sellerController.addItem) 
+router.patch('/seller/item/:id',auth, sellerController.editItem)
 
-router.patch('/seller/item/:id',auth, hasRoles(['admin', 'seller']),sellerController.editItem)
+router.delete('/seller/item/:id',auth, sellerController.deleteItem )
+router.get('/seller/items',auth,sellerController.allItems)
 
-router.delete('/seller/item/:id', hasRoles(['admin', 'seller']), sellerController.deleteItem )
-router.get('/seller/items', hasRoles(['admin', 'seller']) ,sellerController.allItems)
-
-router.get('/seller/item/:id', sellerController.getSingleItem)
+router.get('/seller/item/:id',auth, sellerController.getSingleItem)
 
 module.exports=router

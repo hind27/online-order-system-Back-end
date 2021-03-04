@@ -5,7 +5,7 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const SellerSchema = Schema(
+const SellerSchema =  new Schema(
   {
     storeName: {
       required: true,

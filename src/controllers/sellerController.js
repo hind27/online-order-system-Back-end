@@ -25,7 +25,7 @@ exports.addItem = async(req, res) =>{
             message: "internal server error" })
     }
 }
-exports.editItem = async(req, res, next)=>{
+exports.editItem = async(req, res)=>{
     const updates = Object.keys(req.body)
     const validkeys = ['title', 'description', 'category', 'price','imageUrl']
     const validrequest = updates.every((update) => validkeys.includes(update))
@@ -40,7 +40,7 @@ exports.editItem = async(req, res, next)=>{
         res.status(500).send({ message: "internal server error" })
     }
 }
-exports.deleteItem = async(req, res, next)=>{
+exports.deleteItem = async(req, res)=>{
     try {
         const item = await Item.deleteOne({ _id: req.params.id, owner: req.user._id })
         if (!item) return res.status(404).send({  message: "not found" })
@@ -56,7 +56,7 @@ exports.deleteItem = async(req, res, next)=>{
         })
     }
 }
-exports.allItems = async(req, res, next)=>{
+exports.allItems = async(req, res)=>{
     try {
         const items = await Item.find({ owner: req.user._id })
         res.status(200).send({
@@ -71,7 +71,7 @@ exports.allItems = async(req, res, next)=>{
         }) 
     }
 }
-exports.getSingleItem = async(req, res, next)=>{
+exports.getSingleItem = async(req, res)=>{
     try{
         const item = await Item.findOne({_id: req.params.id})
         item.clicks += 1 

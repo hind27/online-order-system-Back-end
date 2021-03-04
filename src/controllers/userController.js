@@ -3,7 +3,7 @@ const User = require('../models/user')
 const Seller = require('../models/seller')
 const Item = require('../models/item')
 const Cart = require('../models/cart');
-const { findById } = require('../models/cart');
+
     
 exports.getStores = (req, res) => {
     Seller.find(function(err, stores) {
@@ -85,8 +85,7 @@ exports.login = async (req, res, next) => {
          let seller 
         const token = await user.generateToken()
         if(user.role=='seller'){
-          
-            seller= await Seller.find({_id:user._userId}).populate("_Seller")
+           let seller= await Seller.findOne({_userId:user._id})
             res.status(200).send({
                 error: null,
                 apiStatus:true,

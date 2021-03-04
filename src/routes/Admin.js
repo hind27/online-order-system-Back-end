@@ -11,3 +11,5 @@ router.get("/adminPanel", auth, authRole(), (req, res) => {
         title: "ADMIN PANEL",
     });
 });
+
+module.exports=router

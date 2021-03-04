@@ -12,7 +12,6 @@ const auth = async(req, res, next)=>{
         const decodedToken = jwt.verify(token, process.env.JWTKEY)
         const user = await User.findOne({_id: decodedToken._id, 'tokens.token':token })
         if(!user) throw new  Error("User cannot find!!");
-        //user.isVerified = true;
         req.user= user
         req.token = token
         next()
@@ -25,35 +24,57 @@ const auth = async(req, res, next)=>{
         })
     }
 }
-//app.get('/api/test', hasRoles(['admin', 'freelancer'], callback);
-function hasRoles(roles) {
-  return hasRoles[roles] || (hasRoles[roles] = function(req, res, next) {
-      var isAllowed = false,
-        user = req.session.user;
 
-    roles.forEach(function(role) {
-        user.roles.forEach(function(userRole) {
-          // roles must be in lowercase
-          if(role === userRole) {
-            isAllowed = true;
-          }
-        });
-    });
+const userMiddleware = (req, res, next) => {
+  if (req.user.role !== "user") {
+    return res.status(400).json({ message: "User access denied" });
+  }
+  next();
+};
 
-    if(!isAllowed) {
-      res.send(401, {message: 'Unauthorized'});
-    } else {
-      next();
+const adminMiddleware =  async(req, res, next) => {
+  if (req.user.role !== "seller") {
+    if (req.user.role !== "admin") {
+      return res.status(400).json({ message: "Admin access denied" });
     }
-  });
+  }
+  next();
+};
+
+const superAdminMiddleware = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(200).json({ message: "Super Admin access denied" });
+  }
+  next();
 }
+//app.get('/api/test', hasRoles(['admin', 'freelancer'], callback);
+// function hasRoles(roles) {
+//   return hasRoles[roles] || (hasRoles[roles] = function(req, res, next) {
+//       var isAllowed = false,
+//         user = req.session.user;
+
+//     roles.forEach(function(role) {
+//         user.roles.forEach(function(userRole) {
+//           // roles must be in lowercase
+//           if(role === userRole) {
+//             isAllowed = true;
+//           }
+//         });
+//     });
+
+//     if(!isAllowed) {
+//       res.send(401, {message: 'Unauthorized'});
+//     } else {
+//       next();
+//     }
+//   });
+// }
 
 
   
   
   module.exports = {
     auth,
-    hasRoles
   }
 // const isAdmin = async (req, res, next) => {
 

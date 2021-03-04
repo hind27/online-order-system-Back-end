@@ -5,7 +5,7 @@ const itemSchema = new Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Please Include the product name"]
     },
     description: {
       type: String,
@@ -21,7 +21,7 @@ const itemSchema = new Schema(
     },
     price: {
       type: Number,
-      required: true,
+      required: [true, "Please Include the product price"],
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,

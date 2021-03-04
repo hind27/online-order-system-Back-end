@@ -1,7 +1,9 @@
 
 const User = require('../models/user')
 const Seller = require('../models/seller')
-
+const Item = require('../models/item')
+const Cart = require('../models/cart');
+const { findById } = require('../models/cart');
     
 exports.getStores = (req, res) => {
     Seller.find(function(err, stores) {
@@ -24,7 +26,11 @@ exports.showSingleStore = function(req, res) {
       .populate("_Items")
       .exec(function(err, store) {
         if (err) {
-          return handleError(res, err);
+            res.status(400).send({
+                error: err.message,
+                apiStatus:false,
+                data: "store not found"
+            })
         }
   
         if (!store) {
@@ -38,6 +44,7 @@ exports.showSingleStore = function(req, res) {
         })
       });
   };
+  
 exports.signupUser = async (req, res, next) => {  
     role = req.body.role
     const user = new User(req.body)
@@ -96,12 +103,12 @@ exports.login = async (req, res, next) => {
         res.status(400).send({
             error: error.message,
             apiStatus:false,
-            data: 'unauthorized user'
+            data: 'Something went wrong'
         })
         next(error);
     }
 }
-//not working
+//working
 exports.logout = async (req, res, next) => {
     try{
         req.user.tokens = req.user.tokens.filter((singleToken)=>{
@@ -164,7 +171,7 @@ exports.changePassword = async(req, res)=>{
             error:null,
             apiStatus:true,
             data:{user: req.user},
-            message:'address added'
+            message:'Password changed'
         })
     }
     catch(e){
@@ -172,7 +179,7 @@ exports.changePassword = async(req, res)=>{
         error:e.message,
         apiStatus:false,
         data:'',
-        message:'address add problem'
+        message:'password change problem'
     })
     }
 }
@@ -220,3 +227,4 @@ exports.deleteUser= async(req, res)=>{
         })
     }
 }
+

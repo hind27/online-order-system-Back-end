@@ -30,6 +30,7 @@ const userSchema = new Schema({
          type:Schema.Types.ObjectId,
          ref:'Seller',
     },
+
     tokens: [{
         token: {
             type: String,
@@ -44,6 +45,13 @@ userSchema.virtual('seller', {
     localField: '_id',
     foreignField: '_userId'
 })
+userSchema.virtual('cartitem',{
+    ref:'Cart',
+    localField:'_id',
+    foreignField:'user'
+
+})
+
 userSchema.virtual('fullName').get(function() {
     return this.first_name + ' ' + this.last_name;
   });
@@ -65,12 +73,7 @@ userSchema.pre('save', async function(next){
     next()
 })
 
-//remove tasks for user
-// userSchema.pre('remove', async function(next){
-//     const user = this
-//     await Task.deleteMany({user_id: user._id})
-//     next()
-// })
+
 //generate token 
 userSchema.methods.generateToken = async function(){
     const user = this

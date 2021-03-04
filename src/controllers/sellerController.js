@@ -3,15 +3,6 @@ const User = require("../models/user");
 const Seller = require('../models/seller')
 const Item = require('../models/item')
 
-function handleError(res, err) {
-    return res.status(400).send({
-        error: err.message,
-        apiStatus:false,
-        data: 'unauthorized user'
-    });
-  }
-
-
 
   
   //additem

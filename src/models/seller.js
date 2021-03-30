@@ -5,6 +5,7 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
+
 const SellerSchema =  new Schema(
   {
     storeName: {
@@ -15,7 +16,7 @@ const SellerSchema =  new Schema(
       type: String,
       required: true
      },
-    imageUrl: {
+    image: {
       type: String,
      // required: true,
     }, 
@@ -32,12 +33,12 @@ const SellerSchema =  new Schema(
        
     numberOfBranches: Number,
     _userId:{ type: Schema.Types.ObjectId, ref: 'User'},
-    _Items: [{ type: Schema.Types.ObjectId, ref: "Item" }]
+    items: [{ type: Schema.Types.ObjectId, ref: "Item" }]
   },
   { timestamps: true }
 );
 
-SellerSchema.virtual('item', {
+SellerSchema.virtual('sellerProfuct', {
     ref: 'Item',
     localField: '_id',
     foreignField: 'owner'
@@ -45,6 +46,6 @@ SellerSchema.virtual('item', {
 
 
 
-Seller = mongoose.model('Seller', SellerSchema)
+const Seller = mongoose.model('Seller', SellerSchema)
 
 module.exports = Seller

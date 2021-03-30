@@ -26,11 +26,10 @@ const userSchema = new Schema({
         required: true,
         trim: true
     },
-    _Seller:{    
-         type:Schema.Types.ObjectId,
+    storeinfo:{    
+        type: mongoose.Schema.Types.ObjectId,
          ref:'Seller',
     },
-  
     tokens: [{
         token: {
             type: String,
@@ -77,7 +76,7 @@ userSchema.pre('save', async function(next){
 //generate token 
 userSchema.methods.generateToken = async function(){
     const user = this
-    const token = jwt.sign({_id: user._id.toString() , role:user.role}, process.env.JWTKEY)
+    const token = jwt.sign({_id: user._id.toString() ,role:user.role}, process.env.JWTKEY)
     user.tokens = user.tokens.concat({token})
     await user.save()
     return token

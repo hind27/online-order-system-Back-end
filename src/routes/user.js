@@ -79,7 +79,7 @@ router.get("/cart/showCart", auth, itemController.getCart);
 
 router.post("/delete-cart-item",auth,itemController.emptyCart);
 
-router.post("/remove-cart-item/:itemId",auth,itemController.postCartRemove);
-
+router.post("/remove-cart-item/:itemId",auth,itemController.postCartRemoveitem);
+router.post('/decQuitity',auth, itemController.increaseItem)
 
 module.exports=router

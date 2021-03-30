@@ -6,52 +6,81 @@ const Cart = require('../models/cart');
 
     
 exports.getStores = (req, res) => {
-    Seller.find(function(err, stores) {
-        if (err) {
-          return err
-        }
+  User.find({role: 'seller'}).populate('storeinfo').exec(function(err, stores){
+    if(err){
+        console.log(err);
+    }else{
+ 
      return res.status(200).send({
           error: null,
           apiStatus:true,
-          data: {stores}
-      })
-      });
-
-    
-  };
-
+          stores
+      }) 
+    }   
+  })
+}
   // Get a single restaurant
-exports.showSingleStore = function(req, res) {
-    Seller.findById(req.params.id)
-      .populate("_Items")
-      .exec(function(err, store) {
-        if (err) {
-            res.status(400).send({
-                error: err.message,
-                apiStatus:false,
-                data: "store not found"
-            })
-        }
-  
-        if (!store) {
-          return res.send(404);
-        }
-  
-        return res.status(200).send({
-            error: null,
-            apiStatus:true,
-            data: {store}
+exports.showSingleStore = async(req, res)=>  {
+    try {
+        const items = await Item.find({ owner: req.params.id})
+        User.findById(req.params.id)
+          .populate('storeinfo')
+           .exec(function(err, store) {
+             if (err) {
+                 res.status(400).send({
+                     error: err.message,
+                     apiStatus:false,
+                     data: "store not found"
+                 })
+             }
+       
+             if (!store) {
+               return res.status(400).send({
+                 error: err.message,
+                 apiStatus:false,
+                 data: "store not found"
+                 })
+             }
+       
+             return res.status(200).send({
+                 error: null,
+                 apiStatus:true,
+                 data:{store , items}
+             })
+           });
+    } catch (error) {
+        res.status(400).send({
+            error: error.message,
+            apiStatus:false,
+            data: 'cant get store item '
         })
-      });
-  };
+    }
+   
+      };
+  
   
 exports.signupUser = async (req, res, next) => {  
-    role = req.body.role
-    const user = new User(req.body)
+  const email = req.body.email;
+  const first_name = req.body.first_name;
+  const password = req.body.password;
+  const last_name = req.body.last_name;
+  const mobileNumber = req.body.mobileNumber;
+  const address = req.body.address
+  const role = req.body.role;
     const seller = new Seller(req.body)
     try{
         if(role=='seller'){
             await seller.save()
+            const user = new User({
+                first_name: first_name,
+                last_name: last_name,
+                password: password,
+                email:email,
+                role:role,
+                address: address,
+                mobileNumber: mobileNumber,
+               storeinfo: seller._id,
+              });
             await user.save()
             const token = await user.generateToken()
             res.status(200).send({
@@ -60,6 +89,15 @@ exports.signupUser = async (req, res, next) => {
                 data: {user,seller ,token}
             })
         }
+        const user = new User({
+            first_name: first_name,
+            last_name: last_name,
+            password: password,
+            email:email,
+            role:role,
+            address: address,
+            mobileNumber: mobileNumber,
+          });
         await user.save()
         const token = await user.generateToken()
         res.status(200).send({
@@ -79,18 +117,19 @@ exports.signupUser = async (req, res, next) => {
 }   
 
 
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
     try{
-         const user = await User.findUserByCredentials(req.body.email, req.body.password)
-         let seller 
+        const user = await User.findUserByCredentials(req.body.email, req.body.password)
         const token = await user.generateToken()
         if(user.role=='seller'){
-           let seller= await Seller.findOne({_userId:user._id})
+            console.log(user._id)
+           await User.findOne({_id: user._id}).populate('storeinfo').exec(function(err, user) {
+            if (err) {console.log(err)}
             res.status(200).send({
                 error: null,
                 apiStatus:true,
-                data: {user,seller,token}
-            })
+                user,token
+            })})
         }
         res.status(200).send({
             error: null,
@@ -104,7 +143,7 @@ exports.login = async (req, res, next) => {
             apiStatus:false,
             data: 'Something went wrong'
         })
-        next(error);
+       
     }
 }
 //working

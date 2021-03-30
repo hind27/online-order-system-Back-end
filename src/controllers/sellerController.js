@@ -7,6 +7,7 @@ const Item = require('../models/item')
   
   //additem
 exports.addItem = async(req, res) =>{
+    sellerid = Seller.findOne({_userId:req.user.id})
     try {
         const item = new Item({
             ...req.body,

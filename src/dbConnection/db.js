@@ -2,7 +2,8 @@ const mongoose = require('mongoose')
 mongoose.connect(process.env.MONGODB,{
   useNewUrlParser: true,
    useCreateIndex: true  ,
-    useUnifiedTopology:true}).then(() => {
+    useUnifiedTopology:true
+  , usePushEach: true }).then(() => {
     console.log("Successfully connect to MongoDB.");
   })
   .catch(err => {
